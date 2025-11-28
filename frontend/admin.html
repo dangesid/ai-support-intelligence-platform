@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Support Desk - Admin Dashboard (Kanban)</title>
+<style>
+    body { font-family: Arial; background: #f4f5f7; margin:0; padding:0;}
+    h2 { padding: 10px; }
+    .board { display: flex; gap: 10px; padding: 20px;}
+    .column {
+        width: 25%;
+        background: #e4e6e9;
+        border-radius: 6px;
+        padding: 10px;
+        min-height: 500px;
+    }
+    .column h3 {
+        text-transform: capitalize;
+        margin-top: 0;
+    }
+    .ticket {
+        background: white;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 4px;
+        cursor: grab;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        animation: fadeIn 0.4s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    .category-badge {
+        font-size: 10px;
+        background: #007bff;
+        color: white;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-left: 5px;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <h2>Admin Dashboard - Kanban View</h2>
+</header>
+
+<div class="board">
+    <div id="open" class="column" data-status="open"><h3>open</h3></div>
+    <div id="in-progress" class="column" data-status="in-progress"><h3>in-progress</h3></div>
+    <div id="blocked" class="column" data-status="blocked"><h3>blocked</h3></div>
+    <div id="closed" class="column" data-status="closed"><h3>closed</h3></div>
+</div>
+
+<script>
+const apiBase = "";
+
+// Load tickets into the board
+async function fetchTickets() {
+    const response = await fetch(`${apiBase}/tickets`);
+    const tickets = await response.json();
+
+    // Reset columns first
+    document.querySelectorAll(".column").forEach(col => {
+        col.innerHTML = `<h3>${col.dataset.status}</h3>`;
+    });
+
+    tickets.forEach(ticket => {
+        const column = document.getElementById(ticket.status || "open");
+        if (!column) return;
+
+        const card = document.createElement("div");
+        card.className = "ticket";
+        card.draggable = true;
+        card.dataset.id = ticket.id;
+
+        card.innerHTML = `
+            <strong>${ticket.title}</strong>
+            <span class="category-badge">${ticket.category}</span>
+            <p>${ticket.description}</p>
+        `;
+
+        card.addEventListener("dragstart", dragStart);
+        column.appendChild(card);
+    });
+}
+
+// Drag + Drop
+function dragStart(event) {
+    event.dataTransfer.setData("id", event.target.dataset.id);
+}
+
+document.querySelectorAll(".column").forEach(column => {
+    column.addEventListener("dragover", e => e.preventDefault());
+    column.addEventListener("drop", async (e) => {
+        const ticketId = e.dataTransfer.getData("id");
+        const newStatus = column.dataset.status;
+
+        await fetch(`${apiBase}/tickets/${ticketId}`, {
+            method: "PATCH",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({ status: newStatus })
+        });
+
+        fetchTickets(); // update after change
+    });
+});
+
+
+// Listen for storage events from index.html
+window.addEventListener("storage", (event) => {
+    if (event.key === "newTicket" && event.newValue === "true") {
+        fetchTickets(); // refresh board
+        localStorage.setItem("newTicket", "false"); // reset flag
+    }
+});
+
+// Reload the latest tickets when admin returns to tab
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        fetchTickets();
+    }
+});
+
+// Initial load
+fetchTickets();
+</script>
+
+</body>
+</html>

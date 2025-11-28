@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pandas
+sqlalchemy
+sentence-transformers
+transformers
+torch
+scikit-learn
+xgboost
+faiss-cpu
+langchain
+python-dotenv
+psycopg2-binary
+pytest
+EOF

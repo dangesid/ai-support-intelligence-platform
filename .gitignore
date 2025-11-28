@@ -28,3 +28,6 @@ models/
 # Ignore training outputs
 ml/ticket_classifier.pkl
 ml/model.pkl
+
+#datasets
+dataset.csv

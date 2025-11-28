@@ -19,3 +19,15 @@ venv/
 # DB & Models
 *.db
 models/
+
+# Ignore trained ML model files
+*.pkl
+*.pickle
+*.joblib
+
+# Ignore training outputs
+ml/ticket_classifier.pkl
+ml/model.pkl
+
+#datasets
+dataset.csv

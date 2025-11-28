@@ -1,0 +1,78 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f5f7;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #0052cc;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+h2, h3 {
+  color: #172b4d;
+}
+
+section {
+  background: white;
+  margin: 1rem auto;
+  padding: 1rem;
+  border-radius: 8px;
+  max-width: 900px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+input, textarea, select, button {
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #0052cc;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0065ff;
+}
+
+#board {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.column {
+  background: #ebecf0;
+  padding: 0.5rem;
+  border-radius: 5px;
+  flex: 1;
+}
+
+.tickets-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.ticket {
+  background: #ffffff;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 5px;
+  cursor: grab;
+  border-left: 5px solid #0052cc;
+}
+
+.ticket select {
+  width: 100%;
+  margin-top: 0.5rem;
+}
